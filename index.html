@@ -1,384 +1,468 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RLRF Morning Check-In</title>
-  <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #f7f6f3;
-      color: #1a1a1a;
-      line-height: 1.6;
-      min-height: 100vh;
-    }
-
-    .page {
-      max-width: 640px;
-      margin: 0 auto;
-      padding: 24px 16px 48px;
-    }
-
-    header {
-      border-bottom: 2px solid #1a1a1a;
-      padding-bottom: 16px;
-      margin-bottom: 32px;
-    }
-
-    header h1 {
-      font-size: 1.75rem;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-    }
-
-    header .meta {
-      margin-top: 6px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px 20px;
-      font-size: 0.9rem;
-      color: #555;
-    }
-
-    header .meta span {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .badge {
-      display: inline-block;
-      background: #1a1a1a;
-      color: #f7f6f3;
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 2px 9px;
-      border-radius: 99px;
-      letter-spacing: 0.4px;
-      text-transform: uppercase;
-    }
-
-    .card {
-      background: #fff;
-      border: 1px solid #e0ddd6;
-      border-radius: 10px;
-      padding: 20px;
-      margin-bottom: 18px;
-    }
-
-    .card label,
-    .card .card-label {
-      display: block;
-      font-size: 0.8rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      color: #666;
-      margin-bottom: 8px;
-    }
-
-    .workout-display {
-      font-size: 1.05rem;
-      font-weight: 600;
-      color: #1a1a1a;
-    }
-
-    textarea {
-      width: 100%;
-      border: 1px solid #d4d0c8;
-      border-radius: 6px;
-      padding: 10px 12px;
-      font-family: inherit;
-      font-size: 0.95rem;
-      color: #1a1a1a;
-      background: #fafaf8;
-      resize: vertical;
-      min-height: 80px;
-      transition: border-color 0.15s;
-    }
-
-    textarea:focus {
-      outline: none;
-      border-color: #1a1a1a;
-      background: #fff;
-    }
-
-    textarea::placeholder {
-      color: #aaa;
-    }
-
-    button#generate {
-      width: 100%;
-      padding: 14px;
-      background: #1a1a1a;
-      color: #f7f6f3;
-      border: none;
-      border-radius: 8px;
-      font-family: inherit;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      letter-spacing: 0.2px;
-      transition: background 0.15s, transform 0.1s;
-    }
-
-    button#generate:hover {
-      background: #333;
-    }
-
-    button#generate:active {
-      transform: scale(0.99);
-    }
-
-    #output {
-      display: none;
-      margin-top: 24px;
-    }
-
-    #output .output-card {
-      background: #fff;
-      border: 1px solid #e0ddd6;
-      border-radius: 10px;
-      padding: 20px;
-    }
-
-    #output h2 {
-      font-size: 1rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      color: #666;
-      margin-bottom: 16px;
-    }
-
-    .output-section {
-      margin-bottom: 16px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid #f0ede6;
-    }
-
-    .output-section:last-child {
-      margin-bottom: 0;
-      padding-bottom: 0;
-      border-bottom: none;
-    }
-
-    .output-section .section-label {
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: #999;
-      margin-bottom: 4px;
-    }
-
-    .output-section p {
-      font-size: 0.97rem;
-      color: #1a1a1a;
-    }
-
-    .status-confirm  { color: #1a6b3a; }
-    .status-scale    { color: #8a5f00; }
-    .status-swap     { color: #9b2020; }
-
-    .status-pill {
-      display: inline-block;
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      padding: 2px 9px;
-      border-radius: 99px;
-      margin-bottom: 6px;
-    }
-
-    .pill-confirm { background: #d4edda; color: #1a6b3a; }
-    .pill-scale   { background: #fff3cd; color: #8a5f00; }
-    .pill-swap    { background: #f8d7da; color: #9b2020; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RLRF Morning Check-In</title>
+<style>
+  :root {
+    --accent: #E85C2A;
+    --dark: #1A1A1A;
+    --mid: #2E2E2E;
+    --soft: #F5F0EB;
+    --muted: #888;
+    --card: #222;
+    --good: #2a6b3a;
+    --warn: #b8801a;
+    --caution: #6b2a2a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--dark);
+    color: var(--soft);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
+  }
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 16px 40px;
+  }
+  header {
+    background: var(--mid);
+    border-bottom: 3px solid var(--accent);
+    padding: 24px 16px 18px;
+    margin-bottom: 24px;
+  }
+  header .container { padding: 0; }
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 26px;
+    margin: 4px 0 6px;
+    color: var(--soft);
+  }
+  .date-line {
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .phase-pill {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 4px;
+    padding: 3px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    margin-top: 8px;
+  }
+  h2 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 18px;
+    color: var(--accent);
+    margin: 28px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #333;
+  }
+  .card {
+    background: var(--card);
+    border-left: 3px solid var(--accent);
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    border-radius: 0 4px 4px 0;
+  }
+  .card.good { border-left-color: var(--good); }
+  .card.warn { border-left-color: var(--warn); }
+  .card.caution { border-left-color: var(--caution); }
+  .card-title {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--soft);
+    margin-bottom: 4px;
+  }
+  .card-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .card p, .card li { font-size: 14px; color: #ccc; margin: 4px 0; }
+  .card ul { padding-left: 18px; margin: 8px 0; }
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #ccc;
+    margin: 14px 0 6px;
+  }
+  textarea {
+    width: 100%;
+    background: #1a1a1a;
+    border: 1px solid #444;
+    color: var(--soft);
+    padding: 10px 12px;
+    font-size: 14px;
+    font-family: inherit;
+    border-radius: 4px;
+    resize: vertical;
+    min-height: 60px;
+  }
+  textarea:focus { outline: none; border-color: var(--accent); }
+  button {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 16px;
+    width: 100%;
+  }
+  button:hover { background: #d04e1f; }
+  .adaptation {
+    margin-top: 20px;
+    padding: 14px 16px;
+    border-radius: 4px;
+    background: #1a2a1a;
+    border-left: 3px solid var(--good);
+  }
+  .adaptation.warn {
+    background: #2a2418;
+    border-left-color: var(--warn);
+  }
+  .adaptation.caution {
+    background: #2a1a1a;
+    border-left-color: var(--caution);
+  }
+  .adaptation-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    color: #ddd;
+    margin-bottom: 6px;
+  }
+  .adaptation p { font-size: 14px; color: #ddd; margin: 4px 0; }
+  details {
+    background: #1c1c1c;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+  }
+  details summary {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    color: #ccc;
+  }
+  details summary:hover { color: var(--accent); }
+  details[open] summary { color: var(--accent); margin-bottom: 8px; }
+  details ul { padding-left: 18px; margin: 6px 0; }
+  details li { font-size: 13px; color: #bbb; margin: 3px 0; }
+  .race-countdown {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  footer {
+    text-align: center;
+    font-size: 11px;
+    color: #555;
+    padding: 20px 16px 0;
+  }
+</style>
 </head>
 <body>
-  <div class="page">
-    <header>
-      <h1>RLRF Morning Check-In</h1>
-      <div class="meta">
-        <span id="display-date"></span>
-        <span>Phase: <span class="badge" id="display-phase"></span></span>
-      </div>
-    </header>
-
-    <div class="card">
-      <div class="card-label">Today's Planned Workout</div>
-      <div class="workout-display" id="display-workout"></div>
-    </div>
-
-    <div class="card">
-      <label for="feeling">How are you feeling today?</label>
-      <textarea
-        id="feeling"
-        placeholder="Energy, sleep quality, soreness…"
-        rows="3"
-      ></textarea>
-    </div>
-
-    <div class="card">
-      <label for="issues">Any issues?</label>
-      <textarea
-        id="issues"
-        placeholder="Injuries, niggles, life context…"
-        rows="3"
-      ></textarea>
-    </div>
-
-    <button id="generate">Generate Today's Plan</button>
-
-    <div id="output">
-      <div class="output-card">
-        <h2>Today's Plan</h2>
-
-        <div class="output-section">
-          <div class="section-label">Workout</div>
-          <p id="out-workout"></p>
-        </div>
-
-        <div class="output-section">
-          <div class="section-label">Phase Intent</div>
-          <p id="out-intent"></p>
-        </div>
-
-        <div class="output-section">
-          <div class="section-label">Recommendation</div>
-          <span class="status-pill" id="out-pill"></span>
-          <p id="out-recommendation"></p>
-        </div>
-      </div>
-    </div>
+ 
+<header>
+  <div class="container">
+    <div class="eyebrow">RLRF · Half Marathon Training</div>
+    <h1>Morning Check-In</h1>
+    <div class="date-line" id="dateLine">Loading…</div>
+    <div class="phase-pill" id="phasePill">—</div>
+    <div class="race-countdown" id="raceCountdown"></div>
   </div>
-
-  <script>
-    (function () {
-      const DAYS = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-
-      const WORKOUTS = {
-        0: "Rest or easy movement",
-        1: "Intervals",
-        2: "Boxing + strength",
-        3: "Tempo run",
-        4: "Boxing + strength",
-        5: "Long run",
-        6: "Rest or easy movement",
+</header>
+ 
+<div class="container">
+ 
+  <h2>Today's Workout</h2>
+  <div class="card" id="todayCard">
+    <div class="card-title" id="todayTitle">—</div>
+    <div class="card-sub" id="todaySub">—</div>
+    <div id="todayDetail"></div>
+  </div>
+ 
+  <h2>How are you feeling?</h2>
+  <label for="feelInput">Energy, sleep, soreness, mood</label>
+  <textarea id="feelInput" placeholder="Slept well, legs feel fresh…"></textarea>
+ 
+  <label for="issuesInput">Any issues?</label>
+  <textarea id="issuesInput" placeholder="None — or describe niggles, pain, life context…"></textarea>
+ 
+  <button id="generateBtn">Generate Today's Plan</button>
+ 
+  <div id="adaptationOutput" style="display:none;"></div>
+ 
+  <h2>Reference</h2>
+  <details>
+    <summary>RLRF pace targets</summary>
+    <ul>
+      <li><strong>Long run:</strong> 11:00–12:00/mi · conversational, nose-breathe</li>
+      <li><strong>Tempo:</strong> 9:45–10:05/mi · comfortably hard, short phrases only</li>
+      <li><strong>Fartlek surges:</strong> 9:00–9:30/mi · hard but controlled, easy between</li>
+      <li><strong>Easy/recovery:</strong> 11:30–12:30/mi · fully relaxed</li>
+    </ul>
+  </details>
+ 
+  <details>
+    <summary>TFL prevention — daily 5 min</summary>
+    <ul>
+      <li>Foam roll IT band + TFL · 60 sec each side</li>
+      <li>Low lunge hip flexor stretch · 45 sec each side</li>
+      <li>Pigeon pose · 45 sec each side</li>
+      <li>Clamshells (band) · 2 × 15 each</li>
+      <li>90/90 hip stretch · 45 sec each side</li>
+    </ul>
+    <p style="font-size:12px;color:var(--muted);margin-top:8px;">Red flags: lateral hip tightness not loosening in first mile, pain referral down lateral thigh, hip clicking, knee pain on lateral side. If any appear → rest run, see PT if it persists 3+ days.</p>
+  </details>
+ 
+  <details>
+    <summary>Wednesday strength circuit</summary>
+    <ul>
+      <li>Heavy bag · 2 × 3 min</li>
+      <li>Goblet squat · 3 × 10</li>
+      <li>Romanian deadlift · 3 × 10</li>
+      <li>Single-leg glute bridge · 3 × 12 each (TFL critical)</li>
+      <li>Dumbbell row · 3 × 10 each</li>
+      <li>Dead bug · 3 × 8 each</li>
+      <li>Push-ups · 3 × 10</li>
+    </ul>
+  </details>
+ 
+  <details>
+    <summary>Friday strength circuit</summary>
+    <ul>
+      <li>Heavy bag · 2 × 3 min (moderate)</li>
+      <li>Hip abductors (band) · 3 × 15</li>
+      <li>DB split squat · 3 × 8 each</li>
+      <li>Plank variations · 3 × 30 sec</li>
+      <li>Single-leg calf raises · 3 × 15 each</li>
+      <li>Push-ups · 3 × 10</li>
+    </ul>
+    <p style="font-size:12px;color:var(--muted);margin-top:8px;">If legs feel heavy Friday, scale down — long run priority.</p>
+  </details>
+ 
+  <details>
+    <summary>Phase overview</summary>
+    <ul>
+      <li><strong>Recovery</strong> (mid-Apr–Apr 30): post-8K rebuild, TFL protection</li>
+      <li><strong>Base</strong> (May–Jul 31): aerobic foundation, 3 runs/wk, conversational</li>
+      <li><strong>Higdon N2</strong> (Aug 1–Oct 24): 12-week race block, peak 11–12 mi long</li>
+      <li><strong>Between races</strong> (Oct 25–Nov 21): recovery + light sharpening</li>
+    </ul>
+  </details>
+ 
+  <footer>RLRF · Personalized for Derek · Race 1: Oct 24 · Race 2: Nov 21</footer>
+</div>
+ 
+<script>
+// ============ DATE & PHASE ============
+const today = new Date();
+const dayOfWeek = today.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+const dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+ 
+document.getElementById("dateLine").textContent =
+  `${dayNames[dayOfWeek]}, ${monthNames[today.getMonth()]} ${today.getDate()}, ${today.getFullYear()}`;
+ 
+const race1 = new Date(2026, 9, 24); // Oct 24, 2026
+const race2 = new Date(2026, 10, 21); // Nov 21, 2026
+ 
+function daysBetween(a, b) {
+  return Math.ceil((b - a) / (1000 * 60 * 60 * 24));
+}
+ 
+// Phase detection
+function getPhase(d) {
+  const y = d.getFullYear(), m = d.getMonth(), day = d.getDate();
+  if (y < 2026 || (y === 2026 && m < 3)) return { name: "Pre-plan", color: "muted" };
+  if (y === 2026 && m === 3 && day < 15) return { name: "Pre-plan", color: "muted" };
+  if (y === 2026 && (m === 3 || (m === 4 && day < 1))) return { name: "Recovery / Transition", color: "warn" };
+  if (y === 2026 && m >= 4 && m <= 6) return { name: "Base Building (RLRF)", color: "good" };
+  if (y === 2026 && m === 7) return { name: "Higdon N2 — Early", color: "caution" };
+  if (y === 2026 && m === 8) return { name: "Higdon N2 — Build", color: "caution" };
+  if (y === 2026 && m === 9 && day <= 24) return { name: "Higdon N2 — Peak/Taper", color: "caution" };
+  if (y === 2026 && ((m === 9 && day > 24) || (m === 10 && day <= 21))) return { name: "Between Races", color: "warn" };
+  if (y === 2026 && m === 10 && day > 21) return { name: "Post-race / Off-season", color: "muted" };
+  return { name: "Outside plan window", color: "muted" };
+}
+ 
+const phase = getPhase(today);
+document.getElementById("phasePill").textContent = phase.name;
+ 
+// Race countdown
+const daysToR1 = daysBetween(today, race1);
+const daysToR2 = daysBetween(today, race2);
+let countdown = "";
+if (daysToR1 > 0) countdown += `${daysToR1} days to Race 1 (Oct 24)`;
+if (daysToR1 <= 0 && daysToR2 > 0) countdown = `${daysToR2} days to Race 2 (Nov 21)`;
+if (daysToR1 > 0 && daysToR2 > 0) countdown += ` · ${daysToR2} days to Race 2`;
+document.getElementById("raceCountdown").textContent = countdown;
+ 
+// ============ WORKOUT BY DAY + PHASE ============
+function getWorkout(dayIdx, phaseName) {
+  // Base structure: Mon rest, Tue run, Wed strength, Thu run, Fri strength, Sat rest, Sun long
+  // Workout details shift by phase
+ 
+  const isBase = phaseName.startsWith("Base");
+  const isRecovery = phaseName.startsWith("Recovery");
+  const isHigdonEarly = phaseName.includes("Early");
+  const isHigdonBuild = phaseName.includes("Build");
+  const isHigdonPeak = phaseName.includes("Peak");
+  const isBetween = phaseName.startsWith("Between");
+ 
+  switch (dayIdx) {
+    case 1: // Monday
+      return {
+        title: "Full Rest",
+        sub: "Recovery day — 10K daily steps count",
+        detail: "<p>No structured training. Walk, stretch, hydrate. Optional: TFL prevention routine (see Reference).</p>"
       };
-
-      const PHASE_INTENTS = {
-        "Base": "Base phase focus is building your aerobic engine and movement consistency. Keep intensity controlled — effort should feel comfortably hard at most.",
-        "Build": "Build phase raises overall training load. You're adding more quality sessions; recovery between hard days matters as much as the sessions themselves.",
-        "Peak/Taper": "Peak and taper phase sharpens fitness while protecting freshness. Trust the reduced volume — your body is consolidating the work you've done.",
-        "Between Races": "Between-races period is for active recovery and light maintenance. Protect your body, reflect on what worked, and let fatigue fully clear before the next cycle.",
+    case 2: // Tuesday
+      if (isRecovery) return { title: "Easy Run · 20–30 min", sub: "Recovery phase — keep it short and easy", detail: "<p>3–4 miles easy if cleared to run. Otherwise easy bike or walk. Listen to the TFL.</p>" };
+      if (isBase) return { title: "Easy Run · 30 min", sub: "Base phase — fully conversational, no surges", detail: "<p><strong>5 min</strong> easy warmup → <strong>20 min</strong> easy aerobic → <strong>5 min</strong> easy cooldown.</p><p>Effort: nose-breathe. If you can't, slow down.</p>" };
+      if (isHigdonEarly) return { title: "Fartlek Run · 30 min", sub: "Early build — adding intensity", detail: "<p><strong>5 min</strong> easy warmup → <strong>20 min</strong> with 4–6 fartlek surges (20–60 sec hard at ~7/10 effort, 1–2 min easy between) → <strong>5 min</strong> easy cooldown.</p><p>Run by feel, not by app tracking. Surge pace ~9:00–9:30/mi.</p>" };
+      if (isHigdonBuild || isHigdonPeak) return { title: "Easy Run · 3 mi", sub: "Higdon N2 Tuesday — short and honest", detail: "<p>3 miles easy. Conversational pace ~11:30–12:00/mi. This is recovery between Wed quality and Sun long run.</p>" };
+      if (isBetween) return { title: "Easy Run · 3 mi", sub: "Between races — keep legs moving", detail: "<p>3 miles easy. No quality work yet. If Race 1 was rough, swap for walk + bike.</p>" };
+      return { title: "Easy Run · 30 min", sub: "Default", detail: "<p>Easy aerobic effort.</p>" };
+ 
+    case 3: // Wednesday
+      return {
+        title: "Boxing + Strength",
+        sub: isHigdonPeak ? "Scaled back — mileage priority" : "Power circuit · 30–35 min",
+        detail: isHigdonPeak
+          ? "<p>Lighter session: heavy bag 1 × 3 min, then mobility + glute med work only (clamshells, single-leg glute bridges, hip abductor band). Save the legs for Sunday.</p>"
+          : "<p>See Reference → Wednesday strength circuit. Heavy bag rounds + posterior chain + glute med work. TFL prevention essentials are baked in.</p>"
       };
-
-      const INJURY_WORDS   = ["pain", "injured", "injury", "hurt", "tight", "sore", "aching", "ache", "strain", "sprain", "swollen"];
-      const FATIGUE_WORDS  = ["tired", "exhausted", "drained", "fatigued", "wiped", "wrecked", "no energy", "sluggish", "burned out"];
-
-      function getPhase(date) {
-        const y = date.getFullYear();
-        const m = date.getMonth() + 1; // 1-based
-        const d = date.getDate();
-
-        if (y === 2026) {
-          if (m >= 4 && m <= 6) return "Base";
-          if (m === 7 || m === 8) return "Build";
-          if (
-            (m === 9) ||
-            (m === 10 && d <= 24)
-          ) return "Peak/Taper";
-          if (
-            (m === 10 && d >= 25) ||
-            (m === 11 && d <= 21)
-          ) return "Between Races";
-        }
-        return "Off-Season";
+ 
+    case 4: // Thursday
+      if (isRecovery) return { title: "Easy Run · 20–30 min", sub: "Recovery phase", detail: "<p>3 miles easy. Skip if TFL is talking.</p>" };
+      if (isBase) return { title: "Tempo Run · 30 min", sub: "Base phase — honest but not aggressive", detail: "<p><strong>5 min</strong> warmup → <strong>20 min</strong> tempo at 9:45–10:05/mi (comfortably hard, short phrases only) → <strong>5 min</strong> cooldown.</p>" };
+      if (isHigdonEarly) return { title: "Tempo Run · 30 min", sub: "Early build", detail: "<p><strong>5 min</strong> warmup → <strong>20 min</strong> tempo → <strong>5 min</strong> cooldown. Plus 4–6 strides at end of warmup (20 sec accelerations).</p>" };
+      if (isHigdonBuild || isHigdonPeak) return { title: "Easy Run · 3 mi", sub: "Higdon N2 Thursday — easy day", detail: "<p>3 miles easy. The quality work is on Wednesday in Higdon's plan; Thursday is for recovery from it.</p>" };
+      if (isBetween) return { title: "Easy Run · 3 mi", sub: "Between races", detail: "<p>3 miles easy. Add 4 strides at end if feeling fresh — that's all the sharpening you need before Race 2.</p>" };
+      return { title: "Tempo Run · 30 min", sub: "Default", detail: "<p>Standard tempo session.</p>" };
+ 
+    case 5: // Friday
+      return {
+        title: "Boxing + Strength",
+        sub: isHigdonPeak ? "Light — long run tomorrow" : "Conditioning circuit · 30–35 min",
+        detail: isHigdonPeak
+          ? "<p>Very light. Mobility, hip abductors, single-leg glute bridges. No heavy bag. Long run is the priority.</p>"
+          : "<p>See Reference → Friday strength circuit. Slightly lighter than Wednesday. If legs feel heavy, scale down — Sunday long run is the priority.</p>"
+      };
+ 
+    case 6: // Saturday
+      return {
+        title: "Full Rest",
+        sub: "Pre-long-run rest — intentional",
+        detail: "<p>Two rest days bookend Sunday's long run. Walk, stretch, hydrate. Big dinner. Lay out gear tonight.</p>"
+      };
+ 
+    case 0: // Sunday
+      if (isRecovery) return { title: "Long Run · 4–5 mi", sub: "Recovery phase rebuild", detail: "<p>Easy effort. Walk breaks fine. If TFL is tight, swap for 45 min easy bike.</p>" };
+      if (isBase) return { title: "Long Run · 6–9 mi", sub: "Base phase — building aerobic foundation", detail: "<p>Easy-to-moderate. Start at ~6 mi in May, build to ~9 mi by end of July. Pace 11:00–12:00/mi.</p><p>If 8+ miles: start fueling at 45 min (gel/dates), carry water.</p>" };
+      if (isHigdonEarly) return { title: "Long Run · 5–7 mi", sub: "Higdon N2 weeks 1–4", detail: "<p>Easy pace 11:00–12:00/mi. Heat discipline — run by effort, not pace, in NC summer.</p>" };
+      if (isHigdonBuild) return { title: "Long Run · 8–10 mi", sub: "Higdon N2 weeks 5–8", detail: "<p>Easy pace. Fueling practice — gel at 45 min and again at 90 min if you go past 10. Sodium tabs if it's hot.</p>" };
+      if (isHigdonPeak) {
+        // Check if it's race week or taper
+        const daysOut = daysBetween(today, race1);
+        if (daysOut <= 7 && daysOut >= 0) return { title: "RACE WEEK — Long Run", sub: "3 mi easy + strides OR rest", detail: "<p>If race is today: <strong>RACE DAY.</strong> Trust the work. Don't go out too hot.</p><p>If race is in 1–3 days: rest or shake-out 2 mi easy.</p><p>If race is in 4–7 days: 3–4 mi easy with 4 strides.</p>" };
+        return { title: "Long Run · 10–12 mi", sub: "Higdon N2 weeks 9–11 (peak)", detail: "<p>Peak long runs. Easy effort. Full fueling rehearsal — gel every 45 min, sodium, water plan. Practice race-day breakfast.</p>" };
       }
-
-      function formatDate(date) {
-        return date.toLocaleDateString("en-US", {
-          weekday: "long",
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        });
+      if (isBetween) {
+        const daysOut = daysBetween(today, race2);
+        if (daysOut <= 7 && daysOut >= 0) return { title: "RACE WEEK 2 — Mini Taper", sub: "Race 2 imminent", detail: "<p>Light only. 2–3 mi easy 2 days out. Rest day before.</p><p>If race is today: <strong>RACE DAY 2.</strong> Finish, enjoy it.</p>" };
+        if (daysOut > 14) return { title: "Active Recovery", sub: "Week 1 post-Race 1", detail: "<p>Walk and easy bike only. No running this week. Let the body absorb Race 1.</p>" };
+        return { title: "Long Run · 5–7 mi", sub: "Between-race rebuild", detail: "<p>Easy effort. Just keeping the legs honest before Race 2.</p>" };
       }
-
-      function containsAny(text, words) {
-        const lower = text.toLowerCase();
-        return words.some(w => lower.includes(w));
-      }
-
-      const today = new Date();
-      const phase = getPhase(today);
-      const dayOfWeek = today.getDay();
-      const workout = WORKOUTS[dayOfWeek];
-
-      document.getElementById("display-date").textContent = formatDate(today);
-      document.getElementById("display-phase").textContent = phase;
-      document.getElementById("display-workout").textContent = workout;
-
-      document.getElementById("generate").addEventListener("click", function () {
-        const feeling = document.getElementById("feeling").value;
-        const issues  = document.getElementById("issues").value;
-        const combined = feeling + " " + issues;
-
-        const hasInjury  = containsAny(combined, INJURY_WORDS);
-        const hasFatigue = containsAny(combined, FATIGUE_WORDS);
-
-        let pillClass, pillText, recClass, recText;
-
-        if (hasInjury) {
-          pillClass = "pill-swap";
-          pillText  = "Swap recommended";
-          recClass  = "status-swap";
-          recText   = "You mentioned something that sounds like pain or injury. Consider swapping today's " +
-                      workout.toLowerCase() + " for an easy 20–30 min walk or a full rest day. " +
-                      "Pushing through acute pain rarely shortens recovery — give your body a chance to speak.";
-        } else if (hasFatigue) {
-          pillClass = "pill-scale";
-          pillText  = "Scale back";
-          recClass  = "status-scale";
-          recText   = "Your check-in suggests significant fatigue. Proceed with today's " +
-                      workout.toLowerCase() + ", but dial intensity back ~20%: slower paces, lighter loads, " +
-                      "shorter intervals, or fewer rounds. Listen hard mid-session — it's okay to call it early.";
-        } else {
-          pillClass = "pill-confirm";
-          pillText  = "Plan confirmed";
-          recClass  = "status-confirm";
-          recText   = "Nothing in your check-in flags a concern. Go ahead with " +
-                      workout.toLowerCase() + " as planned. Execute with intent and enjoy the session.";
-        }
-
-        const intent = PHASE_INTENTS[phase] ||
-          "No specific phase intent defined for this period. Default to consistency and listening to your body.";
-
-        document.getElementById("out-workout").textContent = workout;
-        document.getElementById("out-intent").textContent  = intent;
-
-        const pill = document.getElementById("out-pill");
-        pill.textContent = pillText;
-        pill.className   = "status-pill " + pillClass;
-
-        const rec = document.getElementById("out-recommendation");
-        rec.textContent  = recText;
-        rec.className    = recClass;
-
-        const output = document.getElementById("output");
-        output.style.display = "block";
-        output.scrollIntoView({ behavior: "smooth", block: "start" });
-      });
-    })();
-  </script>
+      return { title: "Long Run", sub: "Default", detail: "<p>Easy long run effort.</p>" };
+  }
+}
+ 
+const workout = getWorkout(dayOfWeek, phase.name);
+document.getElementById("todayTitle").textContent = workout.title;
+document.getElementById("todaySub").textContent = workout.sub;
+document.getElementById("todayDetail").innerHTML = workout.detail;
+ 
+// ============ ADAPTATION LOGIC ============
+const generateBtn = document.getElementById("generateBtn");
+const outputDiv = document.getElementById("adaptationOutput");
+ 
+generateBtn.addEventListener("click", () => {
+  const feel = document.getElementById("feelInput").value.toLowerCase();
+  const issues = document.getElementById("issuesInput").value.toLowerCase();
+  const combined = feel + " " + issues;
+ 
+  // TFL-specific red flags
+  const tflKeywords = ["tfl", "hip", "it band", "itb", "lateral", "outer thigh"];
+  const painKeywords = ["pain", "injured", "hurt", "sharp", "stabbing"];
+  const tightKeywords = ["tight", "sore", "stiff", "achy"];
+  const tiredKeywords = ["tired", "exhausted", "wiped", "drained", "low energy", "didn't sleep", "no sleep", "bad sleep", "wired"];
+  const sickKeywords = ["sick", "fever", "cold", "flu", "nauseous"];
+ 
+  let level = "green"; // green, yellow, red
+  let recommendation = "";
+ 
+  const hasTFL = tflKeywords.some(k => combined.includes(k));
+  const hasPain = painKeywords.some(k => combined.includes(k));
+  const hasTight = tightKeywords.some(k => combined.includes(k));
+  const hasTired = tiredKeywords.some(k => combined.includes(k));
+  const hasSick = sickKeywords.some(k => combined.includes(k));
+ 
+  if (hasSick) {
+    level = "red";
+    recommendation = "<p><strong>Skip today.</strong> Sickness isn't something to push through — especially in build phase. Rest, hydrate, eat. Reassess tomorrow. Missing one day costs nothing; pushing through a real illness costs weeks.</p>";
+  } else if (hasTFL && (hasPain || hasTight)) {
+    level = "red";
+    recommendation = "<p><strong>TFL flag — pull the running today.</strong> Your TFL history is the reason this plan exists in its current form. Don't gamble it for one workout.</p><p>Swap for: 30 min easy bike, plus the full TFL prevention routine (see Reference). If symptoms persist 3+ days, see PT.</p>";
+  } else if (hasPain) {
+    level = "red";
+    recommendation = "<p><strong>Pain is information. Skip the run.</strong> Sharp or persistent pain is a stop sign — don't run through it. Walk, easy bike, or rest. If it's gone tomorrow, resume. If not, take another day.</p>";
+  } else if (hasTFL) {
+    level = "yellow";
+    recommendation = "<p><strong>TFL mentioned — proceed cautiously.</strong> Do the workout but cut volume by 25%, hold back on intensity, and run TFL prevention exercises after. If anything sharpens during the run, stop.</p>";
+  } else if (hasTight || hasTired) {
+    level = "yellow";
+    let parts = [];
+    if (hasTight) parts.push("Soreness/tightness");
+    if (hasTired) parts.push("Low energy");
+    recommendation = `<p><strong>${parts.join(" + ")} — scale back ~20%.</strong> Drop intensity a notch, shorten by 5–10 min if needed, and skip any planned strides or surges. Quality over quantity today.</p><p>Extended warmup (8–10 min) before any harder effort.</p>`;
+  } else {
+    level = "green";
+    recommendation = "<p><strong>Green light — execute the plan as written.</strong> Hit the warmup, do the work, cool down properly. Trust the training.</p>";
+  }
+ 
+  outputDiv.style.display = "block";
+  outputDiv.className = "adaptation " + (level === "red" ? "caution" : level === "yellow" ? "warn" : "");
+  outputDiv.innerHTML = `<div class="adaptation-label">Today's Recommendation</div>${recommendation}`;
+  outputDiv.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+</script>
+ 
 </body>
 </html>
