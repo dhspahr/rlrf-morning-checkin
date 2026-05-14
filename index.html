@@ -50,10 +50,7 @@
     margin: 4px 0 6px;
     color: var(--soft);
   }
-  .date-line {
-    color: var(--muted);
-    font-size: 13px;
-  }
+  .date-line { color: var(--muted); font-size: 13px; }
   .phase-pill {
     display: inline-block;
     background: var(--accent);
@@ -73,6 +70,14 @@
     padding-bottom: 6px;
     border-bottom: 1px solid #333;
   }
+  h3 {
+    font-size: 14px;
+    color: var(--soft);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 18px 0 8px;
+    font-weight: 700;
+  }
   .card {
     background: var(--card);
     border-left: 3px solid var(--accent);
@@ -80,22 +85,36 @@
     margin-bottom: 12px;
     border-radius: 0 4px 4px 0;
   }
-  .card.good { border-left-color: var(--good); }
-  .card.warn { border-left-color: var(--warn); }
-  .card.caution { border-left-color: var(--caution); }
   .card-title {
     font-weight: 700;
-    font-size: 15px;
+    font-size: 16px;
     color: var(--soft);
     margin-bottom: 4px;
   }
-  .card-sub {
-    font-size: 12px;
-    color: var(--muted);
-    margin-bottom: 8px;
+  .card-sub { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .card p { font-size: 14px; color: #ccc; margin: 6px 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 8px 0 4px;
   }
-  .card p, .card li { font-size: 14px; color: #ccc; margin: 4px 0; }
-  .card ul { padding-left: 18px; margin: 8px 0; }
+  th {
+    background: var(--mid);
+    color: var(--soft);
+    padding: 8px 10px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+  }
+  td {
+    padding: 7px 10px;
+    color: #ccc;
+    border-bottom: 1px solid #2a2a2a;
+  }
+  tr:nth-child(even) td { background: #1e1e1e; }
+  td:first-child { color: var(--soft); font-weight: 500; }
   label {
     display: block;
     font-size: 13px;
@@ -131,62 +150,38 @@
     width: 100%;
   }
   button:hover { background: #d04e1f; }
-  .adaptation {
-    margin-top: 20px;
-    padding: 14px 16px;
+  .alert {
+    margin: 12px 0;
+    padding: 12px 14px;
     border-radius: 4px;
-    background: #1a2a1a;
-    border-left: 3px solid var(--good);
+    font-size: 13px;
+    line-height: 1.5;
   }
-  .adaptation.warn {
-    background: #2a2418;
-    border-left-color: var(--warn);
-  }
-  .adaptation.caution {
-    background: #2a1a1a;
-    border-left-color: var(--caution);
-  }
-  .adaptation-label {
+  .alert-good { background: #1a2a1a; border-left: 3px solid var(--good); color: #d0e8d4; }
+  .alert-warn { background: #2a2418; border-left: 3px solid var(--warn); color: #e8dbc0; }
+  .alert-caution { background: #2a1a1a; border-left: 3px solid var(--caution); color: #e8c5c5; }
+  .alert-label {
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     font-weight: 700;
-    color: #ddd;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
+    opacity: 0.8;
   }
-  .adaptation p { font-size: 14px; color: #ddd; margin: 4px 0; }
-  details {
-    background: #1c1c1c;
-    border: 1px solid #333;
-    border-radius: 4px;
-    padding: 10px 14px;
-    margin-bottom: 8px;
-  }
-  details summary {
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 13px;
-    color: #ccc;
-  }
-  details summary:hover { color: var(--accent); }
-  details[open] summary { color: var(--accent); margin-bottom: 8px; }
-  details ul { padding-left: 18px; margin: 6px 0; }
-  details li { font-size: 13px; color: #bbb; margin: 3px 0; }
-  .race-countdown {
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 4px;
-  }
+  .strike { text-decoration: line-through; opacity: 0.5; }
+  .race-countdown { font-size: 12px; color: var(--muted); margin-top: 4px; }
   footer {
     text-align: center;
     font-size: 11px;
     color: #555;
     padding: 20px 16px 0;
   }
+  .routine-section { display: none; }
+  .routine-section.active { display: block; }
 </style>
 </head>
 <body>
- 
+
 <header>
   <div class="container">
     <div class="eyebrow">RLRF · Half Marathon Training</div>
@@ -196,273 +191,445 @@
     <div class="race-countdown" id="raceCountdown"></div>
   </div>
 </header>
- 
+
 <div class="container">
- 
-  <h2>Today's Workout</h2>
+
+  <h2>Today's Session</h2>
   <div class="card" id="todayCard">
     <div class="card-title" id="todayTitle">—</div>
     <div class="card-sub" id="todaySub">—</div>
     <div id="todayDetail"></div>
   </div>
- 
+
   <h2>How are you feeling?</h2>
   <label for="feelInput">Energy, sleep, soreness, mood</label>
   <textarea id="feelInput" placeholder="Slept well, legs feel fresh…"></textarea>
- 
+
   <label for="issuesInput">Any issues?</label>
   <textarea id="issuesInput" placeholder="None — or describe niggles, pain, life context…"></textarea>
- 
+
   <button id="generateBtn">Generate Today's Plan</button>
- 
-  <div id="adaptationOutput" style="display:none;"></div>
- 
-  <h2>Reference</h2>
-  <details>
-    <summary>RLRF pace targets</summary>
-    <ul>
-      <li><strong>Long run:</strong> 11:00–12:00/mi · conversational, nose-breathe</li>
-      <li><strong>Tempo:</strong> 9:45–10:05/mi · comfortably hard, short phrases only</li>
-      <li><strong>Fartlek surges:</strong> 9:00–9:30/mi · hard but controlled, easy between</li>
-      <li><strong>Easy/recovery:</strong> 11:30–12:30/mi · fully relaxed</li>
-    </ul>
-  </details>
- 
-  <details>
-    <summary>TFL prevention — daily 5 min</summary>
-    <ul>
-      <li>Foam roll IT band + TFL · 60 sec each side</li>
-      <li>Low lunge hip flexor stretch · 45 sec each side</li>
-      <li>Pigeon pose · 45 sec each side</li>
-      <li>Clamshells (band) · 2 × 15 each</li>
-      <li>90/90 hip stretch · 45 sec each side</li>
-    </ul>
-    <p style="font-size:12px;color:var(--muted);margin-top:8px;">Red flags: lateral hip tightness not loosening in first mile, pain referral down lateral thigh, hip clicking, knee pain on lateral side. If any appear → rest run, see PT if it persists 3+ days.</p>
-  </details>
- 
-  <details>
-    <summary>Wednesday strength circuit</summary>
-    <ul>
-      <li>Heavy bag · 2 × 3 min</li>
-      <li>Goblet squat · 3 × 10</li>
-      <li>Romanian deadlift · 3 × 10</li>
-      <li>Single-leg glute bridge · 3 × 12 each (TFL critical)</li>
-      <li>Dumbbell row · 3 × 10 each</li>
-      <li>Dead bug · 3 × 8 each</li>
-      <li>Push-ups · 3 × 10</li>
-    </ul>
-  </details>
- 
-  <details>
-    <summary>Friday strength circuit</summary>
-    <ul>
-      <li>Heavy bag · 2 × 3 min (moderate)</li>
-      <li>Hip abductors (band) · 3 × 15</li>
-      <li>DB split squat · 3 × 8 each</li>
-      <li>Plank variations · 3 × 30 sec</li>
-      <li>Single-leg calf raises · 3 × 15 each</li>
-      <li>Push-ups · 3 × 10</li>
-    </ul>
-    <p style="font-size:12px;color:var(--muted);margin-top:8px;">If legs feel heavy Friday, scale down — long run priority.</p>
-  </details>
- 
-  <details>
-    <summary>Phase overview</summary>
-    <ul>
-      <li><strong>Recovery</strong> (mid-Apr–Apr 30): post-8K rebuild, TFL protection</li>
-      <li><strong>Base</strong> (May–Jul 31): aerobic foundation, 3 runs/wk, conversational</li>
-      <li><strong>Higdon N2</strong> (Aug 1–Oct 24): 12-week race block, peak 11–12 mi long</li>
-      <li><strong>Between races</strong> (Oct 25–Nov 21): recovery + light sharpening</li>
-    </ul>
-  </details>
- 
+
+  <div id="overallAdaptation"></div>
+
+  <div class="routine-section" id="runSection">
+    <h2>Run Routine</h2>
+    <div id="runAdaptation"></div>
+    <div id="runStructure"></div>
+  </div>
+
+  <div class="routine-section" id="strengthSection">
+    <h2>Strength + Boxing Circuit</h2>
+    <div id="strengthAdaptation"></div>
+    <div id="strengthStructure"></div>
+  </div>
+
+  <div class="routine-section" id="longRunSection">
+    <h2>Long Run Fueling Plan</h2>
+    <div id="longRunFueling"></div>
+  </div>
+
+  <div class="routine-section active" id="tflSection">
+    <h2>TFL Prevention — Daily 5 Min</h2>
+    <div id="tflAdaptation"></div>
+    <table>
+      <thead>
+        <tr><th>Exercise</th><th>Volume</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Foam roll IT band + TFL</td><td>60 sec each side</td></tr>
+        <tr><td>Low lunge hip flexor stretch</td><td>45 sec each side</td></tr>
+        <tr><td>Pigeon pose</td><td>45 sec each side</td></tr>
+        <tr><td>Clamshells (band)</td><td>2 × 15 each</td></tr>
+        <tr><td>90/90 hip stretch</td><td>45 sec each side</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:12px;color:var(--muted);margin-top:10px;">
+      <strong style="color:#ccc;">Red flags:</strong> lateral hip tightness not loosening in first mile, pain referral down lateral thigh, hip clicking, knee pain on lateral side. If any appear, swap today's run for bike + extended TFL work. See PT if 3+ days.
+    </p>
+  </div>
+
+  <div class="routine-section" id="restSection">
+    <h2>Rest Day Guidance</h2>
+    <div id="restContent"></div>
+  </div>
+
   <footer>RLRF · Personalized for Derek · Race 1: Oct 24 · Race 2: Nov 21</footer>
 </div>
- 
+
 <script>
-// ============ DATE & PHASE ============
 const today = new Date();
-const dayOfWeek = today.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+const dayOfWeek = today.getDay();
 const dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
- 
+
 document.getElementById("dateLine").textContent =
-  `${dayNames[dayOfWeek]}, ${monthNames[today.getMonth()]} ${today.getDate()}, ${today.getFullYear()}`;
- 
-const race1 = new Date(2026, 9, 24); // Oct 24, 2026
-const race2 = new Date(2026, 10, 21); // Nov 21, 2026
- 
+  dayNames[dayOfWeek] + ", " + monthNames[today.getMonth()] + " " + today.getDate() + ", " + today.getFullYear();
+
+const race1 = new Date(2026, 9, 24);
+const race2 = new Date(2026, 10, 21);
+
 function daysBetween(a, b) {
-  return Math.ceil((b - a) / (1000 * 60 * 60 * 24));
+  const aMid = new Date(a.getFullYear(), a.getMonth(), a.getDate());
+  const bMid = new Date(b.getFullYear(), b.getMonth(), b.getDate());
+  return Math.round((bMid - aMid) / (1000 * 60 * 60 * 24));
 }
- 
-// Phase detection
+
 function getPhase(d) {
   const y = d.getFullYear(), m = d.getMonth(), day = d.getDate();
-  if (y < 2026 || (y === 2026 && m < 3)) return { name: "Pre-plan", color: "muted" };
-  if (y === 2026 && m === 3 && day < 15) return { name: "Pre-plan", color: "muted" };
-  if (y === 2026 && (m === 3 || (m === 4 && day < 1))) return { name: "Recovery / Transition", color: "warn" };
-  if (y === 2026 && m >= 4 && m <= 6) return { name: "Base Building (RLRF)", color: "good" };
-  if (y === 2026 && m === 7) return { name: "Higdon N2 — Early", color: "caution" };
-  if (y === 2026 && m === 8) return { name: "Higdon N2 — Build", color: "caution" };
-  if (y === 2026 && m === 9 && day <= 24) return { name: "Higdon N2 — Peak/Taper", color: "caution" };
-  if (y === 2026 && ((m === 9 && day > 24) || (m === 10 && day <= 21))) return { name: "Between Races", color: "warn" };
-  if (y === 2026 && m === 10 && day > 21) return { name: "Post-race / Off-season", color: "muted" };
-  return { name: "Outside plan window", color: "muted" };
+  if (y < 2026 || (y === 2026 && m < 3)) return "Pre-plan";
+  if (y === 2026 && m === 3 && day < 15) return "Pre-plan";
+  if (y === 2026 && (m === 3 || (m === 4 && day < 1))) return "Recovery / Transition";
+  if (y === 2026 && m >= 4 && m <= 6) return "Base Building (RLRF)";
+  if (y === 2026 && m === 7) return "Higdon N2 — Early";
+  if (y === 2026 && m === 8) return "Higdon N2 — Build";
+  if (y === 2026 && m === 9 && day <= 24) return "Higdon N2 — Peak/Taper";
+  if (y === 2026 && ((m === 9 && day > 24) || (m === 10 && day <= 21))) return "Between Races";
+  if (y === 2026 && m === 10 && day > 21) return "Post-race / Off-season";
+  return "Outside plan window";
 }
- 
+
 const phase = getPhase(today);
-document.getElementById("phasePill").textContent = phase.name;
- 
-// Race countdown
+document.getElementById("phasePill").textContent = phase;
+
 const daysToR1 = daysBetween(today, race1);
 const daysToR2 = daysBetween(today, race2);
 let countdown = "";
-if (daysToR1 > 0) countdown += `${daysToR1} days to Race 1 (Oct 24)`;
-if (daysToR1 <= 0 && daysToR2 > 0) countdown = `${daysToR2} days to Race 2 (Nov 21)`;
-if (daysToR1 > 0 && daysToR2 > 0) countdown += ` · ${daysToR2} days to Race 2`;
+if (daysToR1 > 0) countdown = daysToR1 + " days to Race 1 · " + daysToR2 + " days to Race 2";
+else if (daysToR2 > 0) countdown = daysToR2 + " days to Race 2 (Nov 21)";
 document.getElementById("raceCountdown").textContent = countdown;
- 
-// ============ WORKOUT BY DAY + PHASE ============
-function getWorkout(dayIdx, phaseName) {
-  // Base structure: Mon rest, Tue run, Wed strength, Thu run, Fri strength, Sat rest, Sun long
-  // Workout details shift by phase
- 
+
+function getSession(dayIdx, phaseName) {
   const isBase = phaseName.startsWith("Base");
   const isRecovery = phaseName.startsWith("Recovery");
   const isHigdonEarly = phaseName.includes("Early");
   const isHigdonBuild = phaseName.includes("Build");
   const isHigdonPeak = phaseName.includes("Peak");
   const isBetween = phaseName.startsWith("Between");
- 
+
   switch (dayIdx) {
-    case 1: // Monday
-      return {
-        title: "Full Rest",
-        sub: "Recovery day — 10K daily steps count",
-        detail: "<p>No structured training. Walk, stretch, hydrate. Optional: TFL prevention routine (see Reference).</p>"
-      };
-    case 2: // Tuesday
-      if (isRecovery) return { title: "Easy Run · 20–30 min", sub: "Recovery phase — keep it short and easy", detail: "<p>3–4 miles easy if cleared to run. Otherwise easy bike or walk. Listen to the TFL.</p>" };
-      if (isBase) return { title: "Easy Run · 30 min", sub: "Base phase — fully conversational, no surges", detail: "<p><strong>5 min</strong> easy warmup → <strong>20 min</strong> easy aerobic → <strong>5 min</strong> easy cooldown.</p><p>Effort: nose-breathe. If you can't, slow down.</p>" };
-      if (isHigdonEarly) return { title: "Fartlek Run · 30 min", sub: "Early build — adding intensity", detail: "<p><strong>5 min</strong> easy warmup → <strong>20 min</strong> with 4–6 fartlek surges (20–60 sec hard at ~7/10 effort, 1–2 min easy between) → <strong>5 min</strong> easy cooldown.</p><p>Run by feel, not by app tracking. Surge pace ~9:00–9:30/mi.</p>" };
-      if (isHigdonBuild || isHigdonPeak) return { title: "Easy Run · 3 mi", sub: "Higdon N2 Tuesday — short and honest", detail: "<p>3 miles easy. Conversational pace ~11:30–12:00/mi. This is recovery between Wed quality and Sun long run.</p>" };
-      if (isBetween) return { title: "Easy Run · 3 mi", sub: "Between races — keep legs moving", detail: "<p>3 miles easy. No quality work yet. If Race 1 was rough, swap for walk + bike.</p>" };
-      return { title: "Easy Run · 30 min", sub: "Default", detail: "<p>Easy aerobic effort.</p>" };
- 
-    case 3: // Wednesday
-      return {
-        title: "Boxing + Strength",
-        sub: isHigdonPeak ? "Scaled back — mileage priority" : "Power circuit · 30–35 min",
-        detail: isHigdonPeak
-          ? "<p>Lighter session: heavy bag 1 × 3 min, then mobility + glute med work only (clamshells, single-leg glute bridges, hip abductor band). Save the legs for Sunday.</p>"
-          : "<p>See Reference → Wednesday strength circuit. Heavy bag rounds + posterior chain + glute med work. TFL prevention essentials are baked in.</p>"
-      };
- 
-    case 4: // Thursday
-      if (isRecovery) return { title: "Easy Run · 20–30 min", sub: "Recovery phase", detail: "<p>3 miles easy. Skip if TFL is talking.</p>" };
-      if (isBase) return { title: "Tempo Run · 30 min", sub: "Base phase — honest but not aggressive", detail: "<p><strong>5 min</strong> warmup → <strong>20 min</strong> tempo at 9:45–10:05/mi (comfortably hard, short phrases only) → <strong>5 min</strong> cooldown.</p>" };
-      if (isHigdonEarly) return { title: "Tempo Run · 30 min", sub: "Early build", detail: "<p><strong>5 min</strong> warmup → <strong>20 min</strong> tempo → <strong>5 min</strong> cooldown. Plus 4–6 strides at end of warmup (20 sec accelerations).</p>" };
-      if (isHigdonBuild || isHigdonPeak) return { title: "Easy Run · 3 mi", sub: "Higdon N2 Thursday — easy day", detail: "<p>3 miles easy. The quality work is on Wednesday in Higdon's plan; Thursday is for recovery from it.</p>" };
-      if (isBetween) return { title: "Easy Run · 3 mi", sub: "Between races", detail: "<p>3 miles easy. Add 4 strides at end if feeling fresh — that's all the sharpening you need before Race 2.</p>" };
-      return { title: "Tempo Run · 30 min", sub: "Default", detail: "<p>Standard tempo session.</p>" };
- 
-    case 5: // Friday
-      return {
-        title: "Boxing + Strength",
-        sub: isHigdonPeak ? "Light — long run tomorrow" : "Conditioning circuit · 30–35 min",
-        detail: isHigdonPeak
-          ? "<p>Very light. Mobility, hip abductors, single-leg glute bridges. No heavy bag. Long run is the priority.</p>"
-          : "<p>See Reference → Friday strength circuit. Slightly lighter than Wednesday. If legs feel heavy, scale down — Sunday long run is the priority.</p>"
-      };
- 
-    case 6: // Saturday
-      return {
-        title: "Full Rest",
-        sub: "Pre-long-run rest — intentional",
-        detail: "<p>Two rest days bookend Sunday's long run. Walk, stretch, hydrate. Big dinner. Lay out gear tonight.</p>"
-      };
- 
-    case 0: // Sunday
-      if (isRecovery) return { title: "Long Run · 4–5 mi", sub: "Recovery phase rebuild", detail: "<p>Easy effort. Walk breaks fine. If TFL is tight, swap for 45 min easy bike.</p>" };
-      if (isBase) return { title: "Long Run · 6–9 mi", sub: "Base phase — building aerobic foundation", detail: "<p>Easy-to-moderate. Start at ~6 mi in May, build to ~9 mi by end of July. Pace 11:00–12:00/mi.</p><p>If 8+ miles: start fueling at 45 min (gel/dates), carry water.</p>" };
-      if (isHigdonEarly) return { title: "Long Run · 5–7 mi", sub: "Higdon N2 weeks 1–4", detail: "<p>Easy pace 11:00–12:00/mi. Heat discipline — run by effort, not pace, in NC summer.</p>" };
-      if (isHigdonBuild) return { title: "Long Run · 8–10 mi", sub: "Higdon N2 weeks 5–8", detail: "<p>Easy pace. Fueling practice — gel at 45 min and again at 90 min if you go past 10. Sodium tabs if it's hot.</p>" };
+    case 1:
+      return { type: "rest", title: "Full Rest", sub: "Recovery day · 10K daily steps count" };
+    case 2:
+      if (isRecovery) return { type: "run-easy", title: "Easy Run · 20–30 min", sub: "Recovery phase — short and easy", warmup: 5, main: 20, cooldown: 5, mainDesc: "Easy aerobic, fully conversational. 3–4 miles if cleared." };
+      if (isBase) return { type: "run-easy", title: "Easy Run · 30 min", sub: "Base phase — fully conversational", warmup: 5, main: 20, cooldown: 5, mainDesc: "Easy aerobic, nose-breathe. ~11:30–12:00/mi." };
+      if (isHigdonEarly) return { type: "run-fartlek", title: "Fartlek Run · 30 min", sub: "Early build — adding intensity", warmup: 5, main: 20, cooldown: 5, mainDesc: "4–6 fartlek surges (20–60 sec hard at ~7/10, 1–2 min easy between). Surge pace ~9:00–9:30/mi." };
+      if (isHigdonBuild || isHigdonPeak) return { type: "run-easy", title: "Easy Run · 3 mi", sub: "Higdon N2 Tuesday — recovery between quality", warmup: 0, main: 30, cooldown: 0, mainDesc: "3 miles easy. ~11:30–12:00/mi. This is recovery, not a workout." };
+      if (isBetween) return { type: "run-easy", title: "Easy Run · 3 mi", sub: "Between races — keep legs moving", warmup: 0, main: 30, cooldown: 0, mainDesc: "3 miles easy. No quality work yet." };
+      return { type: "run-easy", title: "Easy Run · 30 min", sub: "Default", warmup: 5, main: 20, cooldown: 5, mainDesc: "Easy aerobic effort." };
+
+    case 3:
+      return { type: "strength", title: "Boxing + Strength · Power Circuit", sub: isHigdonPeak ? "Scaled back — mileage priority" : "Posterior chain + glute med · 30–35 min", scaled: isHigdonPeak };
+
+    case 4:
+      if (isRecovery) return { type: "run-easy", title: "Easy Run · 20–30 min", sub: "Recovery phase", warmup: 5, main: 20, cooldown: 5, mainDesc: "Easy. Skip if TFL is talking." };
+      if (isBase) return { type: "run-tempo", title: "Tempo Run · 30 min", sub: "Base phase — honest but not aggressive", warmup: 5, main: 20, cooldown: 5, mainDesc: "Tempo pace 9:45–10:05/mi. Comfortably hard, short phrases only." };
+      if (isHigdonEarly) return { type: "run-tempo", title: "Tempo Run · 30 min + strides", sub: "Early build", warmup: 5, main: 20, cooldown: 5, mainDesc: "Tempo at 9:45–10:05/mi. Add 4–6 strides (20 sec accelerations) at end of warmup." };
+      if (isHigdonBuild || isHigdonPeak) return { type: "run-easy", title: "Easy Run · 3 mi", sub: "Higdon N2 Thursday — easy day", warmup: 0, main: 30, cooldown: 0, mainDesc: "3 miles easy. Quality is Wednesday in Higdon's plan; Thursday recovers from it." };
+      if (isBetween) return { type: "run-easy", title: "Easy Run · 3 mi + strides", sub: "Between races", warmup: 0, main: 28, cooldown: 0, mainDesc: "3 miles easy. Add 4 strides at end if fresh — that's the sharpening." };
+      return { type: "run-tempo", title: "Tempo Run · 30 min", sub: "Default", warmup: 5, main: 20, cooldown: 5, mainDesc: "Standard tempo session." };
+
+    case 5:
+      return { type: "strength", title: "Boxing + Strength · Conditioning Circuit", sub: isHigdonPeak ? "Light — long run tomorrow" : "Hip stability + core · 30–35 min", scaled: isHigdonPeak, friday: true };
+
+    case 6:
+      return { type: "rest", title: "Full Rest", sub: "Pre-long-run rest — intentional" };
+
+    case 0:
+      if (isRecovery) return { type: "run-long", title: "Long Run · 4–5 mi", sub: "Recovery phase rebuild", miles: "4–5", pace: "11:30–12:30/mi", fueling: "none needed, hydrate well" };
+      if (isBase) return { type: "run-long", title: "Long Run · 6–9 mi", sub: "Base phase — aerobic foundation", miles: "6–9", pace: "11:00–12:00/mi", fueling: "carry water, gel at 45 min if 8+" };
+      if (isHigdonEarly) return { type: "run-long", title: "Long Run · 5–7 mi", sub: "Higdon N2 weeks 1–4", miles: "5–7", pace: "11:00–12:00/mi", fueling: "water, gel at 45 min" };
+      if (isHigdonBuild) return { type: "run-long", title: "Long Run · 8–10 mi", sub: "Higdon N2 weeks 5–8", miles: "8–10", pace: "11:00–12:00/mi", fueling: "gel at 45 + 90 min, sodium if hot" };
       if (isHigdonPeak) {
-        // Check if it's race week or taper
-        const daysOut = daysBetween(today, race1);
-        if (daysOut <= 7 && daysOut >= 0) return { title: "RACE WEEK — Long Run", sub: "3 mi easy + strides OR rest", detail: "<p>If race is today: <strong>RACE DAY.</strong> Trust the work. Don't go out too hot.</p><p>If race is in 1–3 days: rest or shake-out 2 mi easy.</p><p>If race is in 4–7 days: 3–4 mi easy with 4 strides.</p>" };
-        return { title: "Long Run · 10–12 mi", sub: "Higdon N2 weeks 9–11 (peak)", detail: "<p>Peak long runs. Easy effort. Full fueling rehearsal — gel every 45 min, sodium, water plan. Practice race-day breakfast.</p>" };
+        if (daysToR1 <= 7 && daysToR1 >= 0) return { type: "race-week", title: "RACE WEEK — Race 1", sub: daysToR1 + " day" + (daysToR1 === 1 ? "" : "s") + " to go", daysOut: daysToR1, raceNum: 1 };
+        return { type: "run-long", title: "Long Run · 10–12 mi", sub: "Higdon N2 weeks 9–11 (peak)", miles: "10–12", pace: "11:00–12:00/mi", fueling: "full race rehearsal — breakfast, gel every 45 min, sodium, water plan" };
       }
       if (isBetween) {
-        const daysOut = daysBetween(today, race2);
-        if (daysOut <= 7 && daysOut >= 0) return { title: "RACE WEEK 2 — Mini Taper", sub: "Race 2 imminent", detail: "<p>Light only. 2–3 mi easy 2 days out. Rest day before.</p><p>If race is today: <strong>RACE DAY 2.</strong> Finish, enjoy it.</p>" };
-        if (daysOut > 14) return { title: "Active Recovery", sub: "Week 1 post-Race 1", detail: "<p>Walk and easy bike only. No running this week. Let the body absorb Race 1.</p>" };
-        return { title: "Long Run · 5–7 mi", sub: "Between-race rebuild", detail: "<p>Easy effort. Just keeping the legs honest before Race 2.</p>" };
+        if (daysToR2 <= 7 && daysToR2 >= 0) return { type: "race-week", title: "RACE WEEK — Race 2", sub: daysToR2 + " day" + (daysToR2 === 1 ? "" : "s") + " to go", daysOut: daysToR2, raceNum: 2 };
+        if (daysToR1 < 0 && daysBetween(race1, today) <= 7) return { type: "rest", title: "Active Recovery", sub: "Week 1 post-Race 1 — no running" };
+        return { type: "run-long", title: "Long Run · 5–7 mi", sub: "Between-race rebuild", miles: "5–7", pace: "11:00–12:00/mi", fueling: "gel at 45 min if 7 mi" };
       }
-      return { title: "Long Run", sub: "Default", detail: "<p>Easy long run effort.</p>" };
+      return { type: "rest", title: "Long Run", sub: "Default" };
   }
 }
- 
-const workout = getWorkout(dayOfWeek, phase.name);
-document.getElementById("todayTitle").textContent = workout.title;
-document.getElementById("todaySub").textContent = workout.sub;
-document.getElementById("todayDetail").innerHTML = workout.detail;
- 
-// ============ ADAPTATION LOGIC ============
+
+const session = getSession(dayOfWeek, phase);
+
+document.getElementById("todayTitle").textContent = session.title;
+document.getElementById("todaySub").textContent = session.sub;
+let detailHTML = "";
+if (session.type.indexOf("run") === 0 && session.mainDesc) {
+  detailHTML = "<p>" + session.mainDesc + "</p>";
+}
+document.getElementById("todayDetail").innerHTML = detailHTML;
+
+const runSec = document.getElementById("runSection");
+const strengthSec = document.getElementById("strengthSection");
+const longRunSec = document.getElementById("longRunSection");
+const restSec = document.getElementById("restSection");
+
+function renderRunStructure(scale) {
+  scale = scale || { volumeFactor: 1.0, skipStrides: false, dropIntensity: false };
+  const factor = scale.volumeFactor;
+  const w = Math.round((session.warmup || 0) * factor);
+  const m = Math.round((session.main || 0) * factor);
+  const c = Math.round((session.cooldown || 0) * factor);
+
+  let intensity = session.mainDesc;
+  if (scale.dropIntensity && session.type === "run-tempo") {
+    intensity = "<span class='strike'>" + session.mainDesc + "</span><br><strong>→ Run easy aerobic instead, ~11:30/mi. Save the tempo for next week.</strong>";
+  } else if (scale.dropIntensity && session.type === "run-fartlek") {
+    intensity = "<span class='strike'>" + session.mainDesc + "</span><br><strong>→ Skip surges. Run straight easy aerobic.</strong>";
+  }
+
+  let stridesNote = "";
+  if (session.title.indexOf("strides") !== -1 && scale.skipStrides) {
+    stridesNote = "<p style='color:var(--warn);font-size:13px;'>⚠ Skip strides today.</p>";
+  }
+
+  let html = "<table><thead><tr><th style='width:30%'>Phase</th><th>Detail</th></tr></thead><tbody>";
+  if (w > 0) html += "<tr><td>Warmup · " + w + " min</td><td>Easy walk-jog, build into running pace. Dynamic mobility before starting.</td></tr>";
+  html += "<tr><td>Main · " + m + " min</td><td>" + intensity + "</td></tr>";
+  if (c > 0) html += "<tr><td>Cooldown · " + c + " min</td><td>Easy jog or walk. Stretch hips and TFL after.</td></tr>";
+  html += "</tbody></table>" + stridesNote;
+  return html;
+}
+
+function renderLongRun(scale) {
+  scale = scale || { reduceMileage: false };
+  let miles = session.miles;
+  if (scale.reduceMileage) {
+    miles = miles.split("–")[0] + " mi (reduced from " + session.miles + ")";
+  }
+  return "<table><thead><tr><th style='width:30%'>Element</th><th>Detail</th></tr></thead><tbody>" +
+    "<tr><td>Distance</td><td>" + miles + "</td></tr>" +
+    "<tr><td>Pace</td><td>" + session.pace + " · easy effort throughout</td></tr>" +
+    "<tr><td>Pre-run (90 min)</td><td>Light carb-forward meal: oatmeal, banana, toast with PB</td></tr>" +
+    "<tr><td>Hydration</td><td>16–20 oz water 2 hr before. Sip during.</td></tr>" +
+    "<tr><td>Fueling during</td><td>" + session.fueling + "</td></tr>" +
+    "<tr><td>Post-run (45 min)</td><td>Protein + carbs. Don't skip.</td></tr>" +
+    "</tbody></table>";
+}
+
+function renderStrengthCircuit(isFriday, scale) {
+  scale = scale || { factor: 1.0, skipHeavyBag: false, lighter: false };
+  const wedRows = [
+    { ex: "Heavy bag rounds", vol: "2 × 3 min", note: "60 sec rest between, full combo work", skipIfNoBag: true },
+    { ex: "Goblet squat", vol: "3 × 10", note: "Slow eccentric, knees track toes" },
+    { ex: "Romanian deadlift", vol: "3 × 10", note: "Hip hinge — TFL health" },
+    { ex: "Single-leg glute bridge", vol: "3 × 12 each", note: "Critical for TFL prevention" },
+    { ex: "Dumbbell row", vol: "3 × 10 each", note: "Posture for running form" },
+    { ex: "Dead bug", vol: "3 × 8 each", note: "Core stability" },
+    { ex: "Push-ups", vol: "3 × 10", note: "Upper body finisher" }
+  ];
+  const friRows = [
+    { ex: "Heavy bag rounds", vol: "2 × 3 min", note: "Moderate intensity — don't torch legs", skipIfNoBag: true },
+    { ex: "Hip abductor work (band)", vol: "3 × 15", note: "Clamshells or lateral band walks" },
+    { ex: "Dumbbell split squat", vol: "3 × 8 each", note: "Control descent, hip stability" },
+    { ex: "Plank variations", vol: "3 × 30 sec", note: "Rotate: standard, side, RKC" },
+    { ex: "Calf raises (single leg)", vol: "3 × 15 each", note: "Achilles + lower leg resilience" },
+    { ex: "Push-ups", vol: "3 × 10", note: "Upper body finisher" }
+  ];
+  const rows = isFriday ? friRows : wedRows;
+
+  let html = "<table><thead><tr><th>Exercise</th><th style='width:22%'>Volume</th><th>Notes</th></tr></thead><tbody>";
+  rows.forEach(function(r) {
+    let vol = r.vol;
+    let cls = "";
+    if (scale.skipHeavyBag && r.skipIfNoBag) {
+      cls = "strike";
+      vol = "SKIP";
+    } else if (scale.factor < 1.0) {
+      vol = vol.replace(/^3 ×/, "2 ×");
+    }
+    html += "<tr class='" + cls + "'><td>" + r.ex + "</td><td>" + vol + "</td><td>" + r.note + "</td></tr>";
+  });
+  html += "</tbody></table>";
+
+  if (scale.lighter) {
+    html = "<p style='font-size:13px;color:var(--warn);margin-bottom:10px;'><strong>⚠ Lighter version today.</strong> Reduced sets, skipped heavy bag.</p>" + html;
+  } else if (session.scaled) {
+    html = "<p style='font-size:13px;color:var(--muted);margin-bottom:10px;'>Mileage-priority phase — already scaled back. Mobility + glute med focus.</p>" + html;
+  }
+  return html;
+}
+
+function renderRest() {
+  let html = "<div class='card'><p>No structured training today. The rest is part of the plan — not a missed day.</p><h3>Do today</h3><ul style='font-size:14px;color:#ccc;line-height:1.7;'><li>10K steps (walk the dog, walk to lunch, take the stairs)</li><li>TFL prevention routine — see below</li><li>Hydrate well, eat real food</li><li>Sleep 7.5+ hours tonight</li></ul>";
+  if (dayOfWeek === 6) {
+    html += "<h3>Plus tonight</h3><ul style='font-size:14px;color:#ccc;line-height:1.7;'><li>Big dinner — carb-forward</li><li>Lay out gear for tomorrow's long run</li><li>Hydrate aggressively before bed</li></ul>";
+  }
+  html += "</div>";
+  return html;
+}
+
+function showDefaultRoutines() {
+  if (session.type.indexOf("run") === 0 && session.type !== "run-long" && session.type !== "race-week") {
+    runSec.classList.add("active");
+    document.getElementById("runStructure").innerHTML = renderRunStructure();
+  }
+  if (session.type === "run-long") {
+    runSec.classList.add("active");
+    document.getElementById("runStructure").innerHTML = renderLongRun();
+    longRunSec.classList.add("active");
+    document.getElementById("longRunFueling").innerHTML = "<p style='font-size:13px;color:#aaa;'>Fueling details are in the Long Run table above. Stick to the plan — don't try anything new today.</p>";
+  }
+  if (session.type === "strength") {
+    strengthSec.classList.add("active");
+    document.getElementById("strengthStructure").innerHTML = renderStrengthCircuit(!!session.friday, { factor: session.scaled ? 0.7 : 1.0 });
+  }
+  if (session.type === "rest") {
+    restSec.classList.add("active");
+    document.getElementById("restContent").innerHTML = renderRest();
+  }
+  if (session.type === "race-week") {
+    runSec.classList.add("active");
+    const out = session.daysOut;
+    let plan = "";
+    if (out === 0) plan = "<div class='alert alert-good'><strong>RACE DAY.</strong> Trust the work. Don't go out too hot. Fueling: stick to what you practiced. See you at the finish.</div>";
+    else if (out <= 2) plan = "<div class='alert alert-warn'><strong>" + out + " day" + (out === 1 ? "" : "s") + " out.</strong> Rest or 2 mi shake-out only. Hydrate. Carb-load. Lay out gear.</div>";
+    else plan = "<div class='alert alert-warn'><strong>Race week.</strong> 3–4 mi easy with 4 strides today. No quality work. Focus on sleep and hydration.</div>";
+    document.getElementById("runStructure").innerHTML = plan;
+  }
+}
+
+showDefaultRoutines();
+
 const generateBtn = document.getElementById("generateBtn");
-const outputDiv = document.getElementById("adaptationOutput");
- 
-generateBtn.addEventListener("click", () => {
+const overallDiv = document.getElementById("overallAdaptation");
+const runAdaptDiv = document.getElementById("runAdaptation");
+const strengthAdaptDiv = document.getElementById("strengthAdaptation");
+const tflAdaptDiv = document.getElementById("tflAdaptation");
+
+generateBtn.addEventListener("click", function() {
   const feel = document.getElementById("feelInput").value.toLowerCase();
   const issues = document.getElementById("issuesInput").value.toLowerCase();
   const combined = feel + " " + issues;
- 
-  // TFL-specific red flags
+
   const tflKeywords = ["tfl", "hip", "it band", "itb", "lateral", "outer thigh"];
   const painKeywords = ["pain", "injured", "hurt", "sharp", "stabbing"];
   const tightKeywords = ["tight", "sore", "stiff", "achy"];
-  const tiredKeywords = ["tired", "exhausted", "wiped", "drained", "low energy", "didn't sleep", "no sleep", "bad sleep", "wired"];
+  const tiredKeywords = ["tired", "exhausted", "wiped", "drained", "low energy", "didn't sleep", "no sleep", "bad sleep", "wired", "fatigued"];
   const sickKeywords = ["sick", "fever", "cold", "flu", "nauseous"];
- 
-  let level = "green"; // green, yellow, red
-  let recommendation = "";
- 
-  const hasTFL = tflKeywords.some(k => combined.includes(k));
-  const hasPain = painKeywords.some(k => combined.includes(k));
-  const hasTight = tightKeywords.some(k => combined.includes(k));
-  const hasTired = tiredKeywords.some(k => combined.includes(k));
-  const hasSick = sickKeywords.some(k => combined.includes(k));
- 
+
+  const hasTFL = tflKeywords.some(function(k) { return combined.indexOf(k) !== -1; });
+  const hasPain = painKeywords.some(function(k) { return combined.indexOf(k) !== -1; });
+  const hasTight = tightKeywords.some(function(k) { return combined.indexOf(k) !== -1; });
+  const hasTired = tiredKeywords.some(function(k) { return combined.indexOf(k) !== -1; });
+  const hasSick = sickKeywords.some(function(k) { return combined.indexOf(k) !== -1; });
+
+  let level = "good";
+  let overallMsg = "";
+
   if (hasSick) {
-    level = "red";
-    recommendation = "<p><strong>Skip today.</strong> Sickness isn't something to push through — especially in build phase. Rest, hydrate, eat. Reassess tomorrow. Missing one day costs nothing; pushing through a real illness costs weeks.</p>";
+    level = "caution";
+    overallMsg = "<strong>Skip today.</strong> Sickness isn't something to push through, especially in the current phase. Rest, hydrate, eat. Reassess tomorrow.";
   } else if (hasTFL && (hasPain || hasTight)) {
-    level = "red";
-    recommendation = "<p><strong>TFL flag — pull the running today.</strong> Your TFL history is the reason this plan exists in its current form. Don't gamble it for one workout.</p><p>Swap for: 30 min easy bike, plus the full TFL prevention routine (see Reference). If symptoms persist 3+ days, see PT.</p>";
+    level = "caution";
+    overallMsg = "<strong>TFL flag — pull the running today.</strong> Your TFL history is the reason this plan exists in its current form. Swap for 30 min easy bike + the full TFL routine below.";
   } else if (hasPain) {
-    level = "red";
-    recommendation = "<p><strong>Pain is information. Skip the run.</strong> Sharp or persistent pain is a stop sign — don't run through it. Walk, easy bike, or rest. If it's gone tomorrow, resume. If not, take another day.</p>";
+    level = "caution";
+    overallMsg = "<strong>Pain is information. Skip the run.</strong> Walk or rest. If gone tomorrow, resume. If not, another day off.";
   } else if (hasTFL) {
-    level = "yellow";
-    recommendation = "<p><strong>TFL mentioned — proceed cautiously.</strong> Do the workout but cut volume by 25%, hold back on intensity, and run TFL prevention exercises after. If anything sharpens during the run, stop.</p>";
-  } else if (hasTight || hasTired) {
-    level = "yellow";
-    let parts = [];
-    if (hasTight) parts.push("Soreness/tightness");
-    if (hasTired) parts.push("Low energy");
-    recommendation = `<p><strong>${parts.join(" + ")} — scale back ~20%.</strong> Drop intensity a notch, shorten by 5–10 min if needed, and skip any planned strides or surges. Quality over quantity today.</p><p>Extended warmup (8–10 min) before any harder effort.</p>`;
+    level = "warn";
+    overallMsg = "<strong>TFL mentioned — proceed cautiously.</strong> Cut volume by 25%, hold back on intensity, do the full TFL routine. Stop if anything sharpens.";
+  } else if (hasTight && hasTired) {
+    level = "warn";
+    overallMsg = "<strong>Soreness + low energy — scale back ~25%.</strong> Drop intensity, shorten the main set, skip strides.";
+  } else if (hasTight) {
+    level = "warn";
+    overallMsg = "<strong>Soreness/tightness — scale back ~20%.</strong> Extended warmup. Drop the harder efforts. Quality over quantity today.";
+  } else if (hasTired) {
+    level = "warn";
+    overallMsg = "<strong>Low energy — scale back ~20%.</strong> Shorten the main set, drop intensity. Better to land tomorrow fresh than push and dig a hole.";
   } else {
-    level = "green";
-    recommendation = "<p><strong>Green light — execute the plan as written.</strong> Hit the warmup, do the work, cool down properly. Trust the training.</p>";
+    level = "good";
+    overallMsg = "<strong>Green light — execute the plan as written.</strong> Trust the training.";
   }
- 
-  outputDiv.style.display = "block";
-  outputDiv.className = "adaptation " + (level === "red" ? "caution" : level === "yellow" ? "warn" : "");
-  outputDiv.innerHTML = `<div class="adaptation-label">Today's Recommendation</div>${recommendation}`;
-  outputDiv.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  overallDiv.innerHTML = "<div class='alert alert-" + level + "'><div class='alert-label'>Today's Recommendation</div>" + overallMsg + "</div>";
+
+  [runSec, strengthSec, longRunSec, restSec].forEach(function(s) { s.classList.remove("active"); });
+  document.getElementById("tflSection").classList.add("active");
+
+  if (hasSick || hasPain || (hasTFL && (hasPain || hasTight))) {
+    restSec.classList.add("active");
+    let restMsg = hasSick
+      ? "Sickness day. Sleep, fluids, protein. Tomorrow reassess."
+      : (hasTFL ? "TFL is talking. 30 min easy bike if you want movement. Then the full TFL routine below — twice today." : "Pain day. Walk if comfortable. No running.");
+    document.getElementById("restContent").innerHTML = "<div class='card'><p>" + restMsg + "</p></div>";
+    tflAdaptDiv.innerHTML = hasTFL
+      ? "<div class='alert alert-caution'><div class='alert-label'>Extra Focus Today</div>Run this routine <strong>twice</strong> — morning and evening. Spend full 60 sec on the foam roll and clamshells.</div>"
+      : "";
+    overallDiv.scrollIntoView({ behavior: "smooth", block: "start" });
+    return;
+  }
+
+  const scale = {
+    volumeFactor: (hasTight && hasTired) ? 0.75 : (hasTight || hasTired) ? 0.8 : 1.0,
+    skipStrides: hasTight || hasTired || hasTFL,
+    dropIntensity: hasTight || hasTired || hasTFL,
+    reduceMileage: hasTight || hasTired || hasTFL,
+    factor: (hasTight && hasTired) ? 0.7 : (hasTight || hasTired) ? 0.8 : 1.0,
+    skipHeavyBag: hasTired,
+    lighter: hasTight || hasTired
+  };
+
+  if (session.type.indexOf("run") === 0 && session.type !== "run-long" && session.type !== "race-week") {
+    runSec.classList.add("active");
+    let adaptNote = "";
+    if (hasTFL) adaptNote = "<div class='alert alert-warn'><div class='alert-label'>TFL Adaptation</div>Volume cut 25%. Intensity dropped to easy. Run TFL routine before AND after. Stop if the hip flares.</div>";
+    else if (hasTight && hasTired) adaptNote = "<div class='alert alert-warn'><div class='alert-label'>Adapted: Soreness + Fatigue</div>Volume cut 25%. No intensity work today.</div>";
+    else if (hasTight) adaptNote = "<div class='alert alert-warn'><div class='alert-label'>Adapted: Soreness</div>Volume cut 20%. Extended warmup. Easy effort only.</div>";
+    else if (hasTired) adaptNote = "<div class='alert alert-warn'><div class='alert-label'>Adapted: Low Energy</div>Volume cut 20%. Intensity dropped. Shorter main set.</div>";
+    runAdaptDiv.innerHTML = adaptNote;
+    document.getElementById("runStructure").innerHTML = renderRunStructure(scale);
+  }
+
+  if (session.type === "run-long") {
+    runSec.classList.add("active");
+    longRunSec.classList.add("active");
+    let adaptNote = "";
+    if (hasTFL) adaptNote = "<div class='alert alert-warn'><div class='alert-label'>TFL Adaptation</div>Drop to lower end of mileage range. Stop early if the hip flares. TFL routine before AND after.</div>";
+    else if (hasTight || hasTired) adaptNote = "<div class='alert alert-warn'><div class='alert-label'>Adapted Long Run</div>Run the lower end of the mileage range. Pure easy effort. If 3 miles in it's still rough, cut it short — no hero day.</div>";
+    runAdaptDiv.innerHTML = adaptNote;
+    document.getElementById("runStructure").innerHTML = renderLongRun(scale);
+    document.getElementById("longRunFueling").innerHTML = "<p style='font-size:13px;color:#aaa;'>Fueling details above. Don't try anything new today.</p>";
+  }
+
+  if (session.type === "strength") {
+    strengthSec.classList.add("active");
+    let adaptNote = "";
+    if (hasTFL) adaptNote = "<div class='alert alert-warn'><div class='alert-label'>TFL Adaptation</div>Heavy bag → skip. Focus on glute med + hip stability work. Add extra set of clamshells.</div>";
+    else if (hasTight && hasTired) adaptNote = "<div class='alert alert-warn'><div class='alert-label'>Adapted: Soreness + Fatigue</div>Sets reduced from 3 to 2. Heavy bag skipped.</div>";
+    else if (hasTight) adaptNote = "<div class='alert alert-warn'><div class='alert-label'>Adapted: Soreness</div>Sets reduced. Move slowly, prioritize quality over load.</div>";
+    else if (hasTired) adaptNote = "<div class='alert alert-warn'><div class='alert-label'>Adapted: Low Energy</div>Heavy bag skipped. Sets reduced from 3 to 2.</div>";
+    strengthAdaptDiv.innerHTML = adaptNote;
+    document.getElementById("strengthStructure").innerHTML = renderStrengthCircuit(!!session.friday, scale);
+  }
+
+  if (session.type === "rest") {
+    restSec.classList.add("active");
+    document.getElementById("restContent").innerHTML = renderRest();
+  }
+
+  if (session.type === "race-week") {
+    runSec.classList.add("active");
+    runAdaptDiv.innerHTML = "<div class='alert alert-good'><div class='alert-label'>Race Week Note</div>Stick to the taper plan. Minor tightness is normal — don't add anything trying to fix it.</div>";
+    showDefaultRoutines();
+  }
+
+  if (hasTFL) {
+    tflAdaptDiv.innerHTML = "<div class='alert alert-warn'><div class='alert-label'>Extra Focus Today</div>Run this routine <strong>twice</strong> — once now, once after training. Spend full 60 sec on foam roll and clamshells. If anything is sharp instead of tight, stop and call PT.</div>";
+  } else if (hasTight) {
+    tflAdaptDiv.innerHTML = "<div class='alert alert-good'><div class='alert-label'>Recommended Today</div>Don't skip — even on tight days this is the prevention work.</div>";
+  } else {
+    tflAdaptDiv.innerHTML = "";
+  }
+
+  overallDiv.scrollIntoView({ behavior: "smooth", block: "start" });
 });
 </script>
- 
+
 </body>
 </html>
