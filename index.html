@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RLRF Morning Check-In</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f7f6f3;
+      color: #1a1a1a;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+
+    header {
+      border-bottom: 2px solid #1a1a1a;
+      padding-bottom: 16px;
+      margin-bottom: 32px;
+    }
+
+    header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    header .meta {
+      margin-top: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 20px;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    header .meta span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #1a1a1a;
+      color: #f7f6f3;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 2px 9px;
+      border-radius: 99px;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #e0ddd6;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 18px;
+    }
+
+    .card label,
+    .card .card-label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+
+    .workout-display {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    textarea {
+      width: 100%;
+      border: 1px solid #d4d0c8;
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: #1a1a1a;
+      background: #fafaf8;
+      resize: vertical;
+      min-height: 80px;
+      transition: border-color 0.15s;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: #1a1a1a;
+      background: #fff;
+    }
+
+    textarea::placeholder {
+      color: #aaa;
+    }
+
+    button#generate {
+      width: 100%;
+      padding: 14px;
+      background: #1a1a1a;
+      color: #f7f6f3;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.2px;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    button#generate:hover {
+      background: #333;
+    }
+
+    button#generate:active {
+      transform: scale(0.99);
+    }
+
+    #output {
+      display: none;
+      margin-top: 24px;
+    }
+
+    #output .output-card {
+      background: #fff;
+      border: 1px solid #e0ddd6;
+      border-radius: 10px;
+      padding: 20px;
+    }
+
+    #output h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #666;
+      margin-bottom: 16px;
+    }
+
+    .output-section {
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #f0ede6;
+    }
+
+    .output-section:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .output-section .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #999;
+      margin-bottom: 4px;
+    }
+
+    .output-section p {
+      font-size: 0.97rem;
+      color: #1a1a1a;
+    }
+
+    .status-confirm  { color: #1a6b3a; }
+    .status-scale    { color: #8a5f00; }
+    .status-swap     { color: #9b2020; }
+
+    .status-pill {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 2px 9px;
+      border-radius: 99px;
+      margin-bottom: 6px;
+    }
+
+    .pill-confirm { background: #d4edda; color: #1a6b3a; }
+    .pill-scale   { background: #fff3cd; color: #8a5f00; }
+    .pill-swap    { background: #f8d7da; color: #9b2020; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <h1>RLRF Morning Check-In</h1>
+      <div class="meta">
+        <span id="display-date"></span>
+        <span>Phase: <span class="badge" id="display-phase"></span></span>
+      </div>
+    </header>
+
+    <div class="card">
+      <div class="card-label">Today's Planned Workout</div>
+      <div class="workout-display" id="display-workout"></div>
+    </div>
+
+    <div class="card">
+      <label for="feeling">How are you feeling today?</label>
+      <textarea
+        id="feeling"
+        placeholder="Energy, sleep quality, soreness…"
+        rows="3"
+      ></textarea>
+    </div>
+
+    <div class="card">
+      <label for="issues">Any issues?</label>
+      <textarea
+        id="issues"
+        placeholder="Injuries, niggles, life context…"
+        rows="3"
+      ></textarea>
+    </div>
+
+    <button id="generate">Generate Today's Plan</button>
+
+    <div id="output">
+      <div class="output-card">
+        <h2>Today's Plan</h2>
+
+        <div class="output-section">
+          <div class="section-label">Workout</div>
+          <p id="out-workout"></p>
+        </div>
+
+        <div class="output-section">
+          <div class="section-label">Phase Intent</div>
+          <p id="out-intent"></p>
+        </div>
+
+        <div class="output-section">
+          <div class="section-label">Recommendation</div>
+          <span class="status-pill" id="out-pill"></span>
+          <p id="out-recommendation"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const DAYS = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+      const WORKOUTS = {
+        0: "Rest or easy movement",
+        1: "Intervals",
+        2: "Boxing + strength",
+        3: "Tempo run",
+        4: "Boxing + strength",
+        5: "Long run",
+        6: "Rest or easy movement",
+      };
+
+      const PHASE_INTENTS = {
+        "Base": "Base phase focus is building your aerobic engine and movement consistency. Keep intensity controlled — effort should feel comfortably hard at most.",
+        "Build": "Build phase raises overall training load. You're adding more quality sessions; recovery between hard days matters as much as the sessions themselves.",
+        "Peak/Taper": "Peak and taper phase sharpens fitness while protecting freshness. Trust the reduced volume — your body is consolidating the work you've done.",
+        "Between Races": "Between-races period is for active recovery and light maintenance. Protect your body, reflect on what worked, and let fatigue fully clear before the next cycle.",
+      };
+
+      const INJURY_WORDS   = ["pain", "injured", "injury", "hurt", "tight", "sore", "aching", "ache", "strain", "sprain", "swollen"];
+      const FATIGUE_WORDS  = ["tired", "exhausted", "drained", "fatigued", "wiped", "wrecked", "no energy", "sluggish", "burned out"];
+
+      function getPhase(date) {
+        const y = date.getFullYear();
+        const m = date.getMonth() + 1; // 1-based
+        const d = date.getDate();
+
+        if (y === 2026) {
+          if (m >= 4 && m <= 6) return "Base";
+          if (m === 7 || m === 8) return "Build";
+          if (
+            (m === 9) ||
+            (m === 10 && d <= 24)
+          ) return "Peak/Taper";
+          if (
+            (m === 10 && d >= 25) ||
+            (m === 11 && d <= 21)
+          ) return "Between Races";
+        }
+        return "Off-Season";
+      }
+
+      function formatDate(date) {
+        return date.toLocaleDateString("en-US", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+      }
+
+      function containsAny(text, words) {
+        const lower = text.toLowerCase();
+        return words.some(w => lower.includes(w));
+      }
+
+      const today = new Date();
+      const phase = getPhase(today);
+      const dayOfWeek = today.getDay();
+      const workout = WORKOUTS[dayOfWeek];
+
+      document.getElementById("display-date").textContent = formatDate(today);
+      document.getElementById("display-phase").textContent = phase;
+      document.getElementById("display-workout").textContent = workout;
+
+      document.getElementById("generate").addEventListener("click", function () {
+        const feeling = document.getElementById("feeling").value;
+        const issues  = document.getElementById("issues").value;
+        const combined = feeling + " " + issues;
+
+        const hasInjury  = containsAny(combined, INJURY_WORDS);
+        const hasFatigue = containsAny(combined, FATIGUE_WORDS);
+
+        let pillClass, pillText, recClass, recText;
+
+        if (hasInjury) {
+          pillClass = "pill-swap";
+          pillText  = "Swap recommended";
+          recClass  = "status-swap";
+          recText   = "You mentioned something that sounds like pain or injury. Consider swapping today's " +
+                      workout.toLowerCase() + " for an easy 20–30 min walk or a full rest day. " +
+                      "Pushing through acute pain rarely shortens recovery — give your body a chance to speak.";
+        } else if (hasFatigue) {
+          pillClass = "pill-scale";
+          pillText  = "Scale back";
+          recClass  = "status-scale";
+          recText   = "Your check-in suggests significant fatigue. Proceed with today's " +
+                      workout.toLowerCase() + ", but dial intensity back ~20%: slower paces, lighter loads, " +
+                      "shorter intervals, or fewer rounds. Listen hard mid-session — it's okay to call it early.";
+        } else {
+          pillClass = "pill-confirm";
+          pillText  = "Plan confirmed";
+          recClass  = "status-confirm";
+          recText   = "Nothing in your check-in flags a concern. Go ahead with " +
+                      workout.toLowerCase() + " as planned. Execute with intent and enjoy the session.";
+        }
+
+        const intent = PHASE_INTENTS[phase] ||
+          "No specific phase intent defined for this period. Default to consistency and listening to your body.";
+
+        document.getElementById("out-workout").textContent = workout;
+        document.getElementById("out-intent").textContent  = intent;
+
+        const pill = document.getElementById("out-pill");
+        pill.textContent = pillText;
+        pill.className   = "status-pill " + pillClass;
+
+        const rec = document.getElementById("out-recommendation");
+        rec.textContent  = recText;
+        rec.className    = recClass;
+
+        const output = document.getElementById("output");
+        output.style.display = "block";
+        output.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    })();
+  </script>
+</body>
+</html>
